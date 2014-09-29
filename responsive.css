@@ -7,3 +7,14 @@ and (min-device-width : 1281px)
         background: url(homer.jpg) 0 0px;
     }
 }
+
+@media only screen
+and (min-device-width : 1025px)
+and (max-device-width : 1280px)
+{
+    div.homer {
+        width: 300px;
+        height: 300px;
+        background: url(homer.jpg) 0 0px;
+    }
+}
