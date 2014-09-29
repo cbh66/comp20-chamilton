@@ -1,5 +1,5 @@
 @media only screen
-and (min-device-width : 1281px)
+and (min-width : 1281px)
 {
     div.homer {
         width: 600px;
@@ -9,12 +9,23 @@ and (min-device-width : 1281px)
 }
 
 @media only screen
-and (min-device-width : 1025px)
-and (max-device-width : 1280px)
+and (min-width : 1025px)
+and (max-width : 1280px)
 {
     div.homer {
         width: 300px;
         height: 300px;
         background: url(homer.jpg) 0 0px;
+    }
+}
+
+@media only screen
+and (min-width : 769px)
+and (max-width : 1024px)
+{
+    div.homer {
+        width: 300px;
+        height: 300px;
+        background: url(homer.jpg) 0 -300px;
     }
 }
