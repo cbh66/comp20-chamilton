@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Daydream Believer</title>
+    <link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+    <h1 id="title">Daydream Believer</h1>
+
+    <video src="http://www.cs.tufts.edu/comp/20/daydream_believer.webm" id="music_video" controls></video>
+    <div id="lyrics"></div>
+
+    <script>
+    // Complete this section and create a CSS file named style.css
+    var lines =  ["",
+                  "Oh, I could hide 'neath the wings",
+                  "Of the bluebird as she sings.",
+                  "The six o'clock alarm would never ring.",
+                  "But it rings and I rise,",
+                  "Wipe the sleep out of my eyes.",
+                  "My shavin' razor's cold and it stings.",
+                  "",
+                  "Cheer up, Sleepy Jean.",
+                  "Oh, what can it mean.",
+                  "To a daydream believer",
+                  "And a homecoming queen.",
+                  "",
+                  "You once thought of me",
+                  "As a white knight on a steed.",
+                  "Now you know how happy I can be.",
+                  "Oh, and our good times start and end",
+                  "Without dollar one to spend.",
+                  "But how much, baby, do we really need.",
+                  "",
+                  "Cheer up, Sleepy Jean.",
+                  "Oh, what can it mean.",
+                  "To a daydream believer",
+                  "And a homecoming queen.",
+                  "Cheer up, Sleepy Jean.",
+                  "Oh, what can it mean.",
+                  "To a daydream believer",
+                  "And a homecoming queen.",
+                  "",
+                  "[Instrumental interlude]",
+                  "",
+                  "Cheer up, Sleepy Jean.",
+                  "Oh, what can it mean.",
+                  "To a daydream believer",
+                  "And a homecoming queen.",
+                  "Cheer up, Sleepy Jean.",
+                  "Oh, what can it mean.",
+                  "To a daydream believer",
+                  "And a homecoming queen.",
+                  ""]
+    var vid = document.getElementById("music_video");
+    var lyric_location = document.getElementById("lyrics");
+    function display_lyrics()
+    {
+        var line_num = 1;
+        var time = vid.currentTime;
+        if (time < 5) {
+            lyric_location.innerHTML = "";
+            return;
+        } else if (time < 10) {
+            line_num = 1;
+        } else if (time < 14) {
+            line_num = 2;
+        } else if (time < 21) {
+            line_num = 3;
+        } else if (time < 25) {
+            line_num = 4;
+        } else if (time < 30) {
+            line_num = 5;
+        } else if (time < 35) {
+            line_num = 6;
+        } else if (time < 38) {
+            line_num = 7;
+        } else if (time < 41) {
+            line_num = 8;
+        } else if (time < 45) {
+            line_num = 9;
+        } else if (time < 49) {
+            line_num = 10;
+        } else if (time < 52) {
+            line_num = 11;
+        } else if (time < 55) {
+            line_num = 12;
+        } else if (time < 58) {
+            line_num = 13;
+        } else if (time < 62) {
+            line_num = 14;
+        } else if (time < 68) {
+            line_num = 15;
+        } else if (time < 72) {
+            line_num = 16;
+        } else if (time < 77) {
+            line_num = 17;
+        } else if (time < 82) {
+            line_num = 18;
+        } else if (time < 85) {
+            line_num = 19;
+        } else if (time < 89) {
+            line_num = 20;
+        } else if (time < 92) {
+            line_num = 21;
+        } else if (time < 95) {
+            line_num = 22;
+        } else if (time < 102) {
+            line_num = 23;
+        } else if (time < 106) {
+            line_num = 24;
+        } else if (time < 109) {
+            line_num = 25;
+        } else if (time < 112) {
+            line_num = 26;
+        } else if (time < 119) {
+            line_num = 27;
+        } else if (time < 121) {
+            line_num = 28;
+        } else if (time < 125) {
+            line_num = 29;
+        } else if (time < 127) {
+            line_num = 30;
+        } else if (time < 131) {
+            line_num = 31;
+        } else if (time < 134) {
+            line_num = 32;
+        } else if (time < 137) {
+            line_num = 33;
+        } else if (time < 144) {
+            line_num = 34;
+        } else if (time < 148) {
+            line_num = 35;
+        } else if (time < 151) {
+            line_num = 36;
+        } else if (time < 155) {
+            line_num = 37;
+        } else if (time < 162) {
+            line_num = 38;
+        } else {
+            lyric_location.innerHTML = "Thanks for watching!";
+            return;
+        }
+        lyric_location.innerHTML = '<span class="prevline">' + lines[line_num - 1] + '</span><br /><span class="currentline">'+ lines[line_num] + '</span><br /><span class="nextline">' + lines[line_num + 1] + '</span>';
+    }
+    vid.addEventListener("timeupdate", display_lyrics);
+    
+    </script>
+</body>
+</html> 
