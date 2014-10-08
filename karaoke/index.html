@@ -15,6 +15,18 @@
 
     <script>
     // Complete this section and create a CSS file named style.css
+    var vid = document.getElementById("music_video");
+    var lyric_location = document.getElementById("lyrics");
+    
+    var prevline = lyric_location.appendChild(document.createElement("span"));
+    lyric_location.appendChild(document.createElement("br"));
+    var curline = lyric_location.appendChild(document.createElement("span"));
+    lyric_location.appendChild(document.createElement("br"));
+    var nextline = lyric_location.appendChild(document.createElement("span"));
+    prevline.style.color = "#888888";
+    curline.setAttribute("class", "currentline");
+    nextline.style.color = "#888888";
+
     var lines =  ["",
                   "Oh, I could hide 'neath the wings",
                   "Of the bluebird as she sings.",
@@ -55,14 +67,11 @@
                   "To a daydream believer",
                   "And a homecoming queen.",
                   ""]
-    var vid = document.getElementById("music_video");
-    var lyric_location = document.getElementById("lyrics");
     function display_lyrics()
     {
         var line_num = 1;
         var time = vid.currentTime;
         if (time < 5) {
-            lyric_location.innerHTML = "";
             return;
         } else if (time < 10) {
             line_num = 1;
@@ -141,10 +150,17 @@
         } else if (time < 162) {
             line_num = 38;
         } else {
-            lyric_location.innerHTML = "Thanks for watching!";
             return;
         }
-        lyric_location.innerHTML = '<span class="prevline">' + lines[line_num - 1] + '</span><br /><span class="currentline">'+ lines[line_num] + '</span><br /><span class="nextline">' + lines[line_num + 1] + '</span>';
+        if (line_num > 0 && line_num <= lines.length){
+            prevline.innerText = lines[line_num - 1];
+        }
+        if (line_num >= 0 && line_num < lines.length) {
+            curline.innerText = lines[line_num];
+        }
+        if (line_num >= -1 && line_num < lines.length - 1) {
+            nextline.innerText = lines[line_num + 1];
+        }
     }
     vid.addEventListener("timeupdate", display_lyrics);
     
