@@ -74,7 +74,7 @@
                   "",
                   "",
                   "Thanks for watching!"]
-                  
+
     function display_lyrics()
     {
         var line_num;
@@ -202,7 +202,9 @@
         }
 
         if (line_num >= 4 && line_num <= 6) {
-            imageplace.src = "alarm_clock.jpg"
+            imageplace.src = "alarm_clock.jpg";
+        } else if (line_num >= 14 && line_num <= 15) {
+            imageplace.src = "white_knight.jpg";
         } else {
             imageplace.src = "";
         }
