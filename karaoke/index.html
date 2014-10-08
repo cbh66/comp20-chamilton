@@ -18,35 +18,39 @@
     var vid = document.getElementById("music_video");
     var lyric_location = document.getElementById("lyrics");
     
+    var twobefore = lyric_location.appendChild(document.createElement("span"));
+    lyric_location.appendChild(document.createElement("br"));
     var prevline = lyric_location.appendChild(document.createElement("span"));
     lyric_location.appendChild(document.createElement("br"));
     var curline = lyric_location.appendChild(document.createElement("span"));
     lyric_location.appendChild(document.createElement("br"));
     var nextline = lyric_location.appendChild(document.createElement("span"));
-    prevline.style.color = "#888888";
-    curline.setAttribute("class", "currentline");
-    nextline.style.color = "#888888";
+    lyric_location.appendChild(document.createElement("br"));
+    var twoafter = lyric_location.appendChild(document.createElement("span"));
 
-    var lines =  ["",
+    twobefore.style.color = "#888888";
+    twoafter.style.color = "#888888";
+
+    var lines =  [" ",
                   "Oh, I could hide 'neath the wings",
                   "Of the bluebird as she sings.",
                   "The six o'clock alarm would never ring.",
                   "But it rings and I rise,",
                   "Wipe the sleep out of my eyes.",
                   "My shavin' razor's cold and it stings.",
-                  "",
+                  " ",
                   "Cheer up, Sleepy Jean.",
                   "Oh, what can it mean.",
                   "To a daydream believer",
                   "And a homecoming queen.",
-                  "",
+                  " ",
                   "You once thought of me",
                   "As a white knight on a steed.",
                   "Now you know how happy I can be.",
                   "Oh, and our good times start and end",
                   "Without dollar one to spend.",
                   "But how much, baby, do we really need.",
-                  "",
+                  " ",
                   "Cheer up, Sleepy Jean.",
                   "Oh, what can it mean.",
                   "To a daydream believer",
@@ -55,9 +59,9 @@
                   "Oh, what can it mean.",
                   "To a daydream believer",
                   "And a homecoming queen.",
-                  "",
+                  " ",
                   "[Instrumental interlude]",
-                  "",
+                  " ",
                   "Cheer up, Sleepy Jean.",
                   "Oh, what can it mean.",
                   "To a daydream believer",
@@ -66,13 +70,19 @@
                   "Oh, what can it mean.",
                   "To a daydream believer",
                   "And a homecoming queen.",
-                  ""]
+                  " ",
+                  " ",
+                  "Thanks for watching!"]
     function display_lyrics()
     {
         var line_num = 1;
         var time = vid.currentTime;
-        if (time < 5) {
-            return;
+        if (time < 1) {
+            line_num = -2;
+        } else if (time < 3) {
+            line_num = -1;
+        } else if (time < 5) {
+            line_num = 0;
         } else if (time < 10) {
             line_num = 1;
         } else if (time < 14) {
@@ -149,17 +159,40 @@
             line_num = 37;
         } else if (time < 162) {
             line_num = 38;
+        } else if (time < 164) {
+            line_num = 39;
+        } else if (time < 166) {
+            line_num = 40;
         } else {
-            return;
+            line_num = 41;
+        }
+
+        if (line_num > 1 && line_num <= lines.length + 1){
+            twobefore.innerText = lines[line_num - 2];
+        } else {
+            twobefore.innerText = "";
         }
         if (line_num > 0 && line_num <= lines.length){
             prevline.innerText = lines[line_num - 1];
+        } else {
+            prevline.innerText = "";
         }
         if (line_num >= 0 && line_num < lines.length) {
             curline.innerText = lines[line_num];
+            lyric_location.style.backgroundImage = "url('red-arrow.jpeg')";
+        } else {
+            curline.innerText = "";
+            lyric_location.style.backgroundImage = "";
         }
         if (line_num >= -1 && line_num < lines.length - 1) {
             nextline.innerText = lines[line_num + 1];
+        } else {
+            nextline.innerText = "";
+        }
+        if (line_num >= -2 && line_num < lines.length - 2) {
+            twoafter.innerText = lines[line_num + 2];
+        } else {
+            twoafter.innerText = "";
         }
     }
     vid.addEventListener("timeupdate", display_lyrics);

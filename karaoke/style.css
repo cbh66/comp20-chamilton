@@ -9,3 +9,9 @@
     margin: 0 auto;
 }
 
+#lyrics {
+    height: 90px;
+    padding: 10px 25px;
+    background-repeat: no-repeat;
+    background-position: left;
+}
