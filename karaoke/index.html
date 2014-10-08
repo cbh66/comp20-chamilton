@@ -14,7 +14,6 @@
     <div id="lyrics"></div>
 
     <script>
-    // Complete this section and create a CSS file named style.css
     var vid = document.getElementById("music_video");
     var lyric_location = document.getElementById("lyrics");
     
@@ -28,29 +27,28 @@
     lyric_location.appendChild(document.createElement("br"));
     var twoafter = lyric_location.appendChild(document.createElement("span"));
 
-    twobefore.style.color = "#888888";
-    twoafter.style.color = "#888888";
+    twobefore.style.color = twoafter.style.color = "#888888";
 
-    var lines =  [" ",
+    var lines =  ["",
                   "Oh, I could hide 'neath the wings",
                   "Of the bluebird as she sings.",
                   "The six o'clock alarm would never ring.",
                   "But it rings and I rise,",
                   "Wipe the sleep out of my eyes.",
                   "My shavin' razor's cold and it stings.",
-                  " ",
+                  "",
                   "Cheer up, Sleepy Jean.",
                   "Oh, what can it mean.",
                   "To a daydream believer",
                   "And a homecoming queen.",
-                  " ",
+                  "",
                   "You once thought of me",
                   "As a white knight on a steed.",
                   "Now you know how happy I can be.",
                   "Oh, and our good times start and end",
                   "Without dollar one to spend.",
                   "But how much, baby, do we really need.",
-                  " ",
+                  "",
                   "Cheer up, Sleepy Jean.",
                   "Oh, what can it mean.",
                   "To a daydream believer",
@@ -59,9 +57,9 @@
                   "Oh, what can it mean.",
                   "To a daydream believer",
                   "And a homecoming queen.",
-                  " ",
+                  "",
                   "[Instrumental interlude]",
-                  " ",
+                  "",
                   "Cheer up, Sleepy Jean.",
                   "Oh, what can it mean.",
                   "To a daydream believer",
@@ -70,12 +68,12 @@
                   "Oh, what can it mean.",
                   "To a daydream believer",
                   "And a homecoming queen.",
-                  " ",
-                  " ",
+                  "",
+                  "",
                   "Thanks for watching!"]
     function display_lyrics()
     {
-        var line_num = 1;
+        var line_num;
         var time = vid.currentTime;
         if (time < 1) {
             line_num = -2;
@@ -179,10 +177,8 @@
         }
         if (line_num >= 0 && line_num < lines.length) {
             curline.innerText = lines[line_num];
-            lyric_location.style.backgroundImage = "url('red-arrow.jpeg')";
         } else {
             curline.innerText = "";
-            lyric_location.style.backgroundImage = "";
         }
         if (line_num >= -1 && line_num < lines.length - 1) {
             nextline.innerText = lines[line_num + 1];
@@ -193,6 +189,12 @@
             twoafter.innerText = lines[line_num + 2];
         } else {
             twoafter.innerText = "";
+        }
+
+        if (line_num >= 1 && line_num <= 38) {
+            lyric_location.style.backgroundImage = "url('red-arrow.jpeg')";
+        } else {
+            lyric_location.style.backgroundImage = "";
         }
     }
     vid.addEventListener("timeupdate", display_lyrics);
