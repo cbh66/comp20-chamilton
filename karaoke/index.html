@@ -16,6 +16,9 @@
     <script>
     var vid = document.getElementById("music_video");
     var lyric_location = document.getElementById("lyrics");
+
+    var imageplace = lyric_location.appendChild(document.createElement("img"));
+    imageplace.style.cssFloat = "right";
     
     var twobefore = lyric_location.appendChild(document.createElement("span"));
     lyric_location.appendChild(document.createElement("br"));
@@ -71,6 +74,7 @@
                   "",
                   "",
                   "Thanks for watching!"]
+                  
     function display_lyrics()
     {
         var line_num;
@@ -195,6 +199,12 @@
             lyric_location.style.backgroundImage = "url('red-arrow.jpeg')";
         } else {
             lyric_location.style.backgroundImage = "";
+        }
+
+        if (line_num >= 4 && line_num <= 6) {
+            imageplace.src = "alarm_clock.jpg"
+        } else {
+            imageplace.src = "";
         }
     }
     vid.addEventListener("timeupdate", display_lyrics);
