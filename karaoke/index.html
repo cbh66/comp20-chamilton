@@ -170,29 +170,29 @@
         }
 
         if (line_num > 1 && line_num <= lines.length + 1){
-            twobefore.innerText = lines[line_num - 2];
+            twobefore.textContent = lines[line_num - 2];
         } else {
-            twobefore.innerText = "";
+            twobefore.textContent = "";
         }
         if (line_num > 0 && line_num <= lines.length){
-            prevline.innerText = lines[line_num - 1];
+            prevline.textContent = lines[line_num - 1];
         } else {
-            prevline.innerText = "";
+            prevline.textContent = "";
         }
         if (line_num >= 0 && line_num < lines.length) {
-            curline.innerText = lines[line_num];
+            curline.textContent = lines[line_num];
         } else {
-            curline.innerText = "";
+            curline.textContent = "";
         }
         if (line_num >= -1 && line_num < lines.length - 1) {
-            nextline.innerText = lines[line_num + 1];
+            nextline.textContent = lines[line_num + 1];
         } else {
-            nextline.innerText = "";
+            nextline.textContent = "";
         }
         if (line_num >= -2 && line_num < lines.length - 2) {
-            twoafter.innerText = lines[line_num + 2];
+            twoafter.textContent = lines[line_num + 2];
         } else {
-            twoafter.innerText = "";
+            twoafter.textContent = "";
         }
 
         if (line_num >= 1 && line_num <= 38) {
