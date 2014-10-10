@@ -8,17 +8,34 @@
 </head>
 <body>
     <div id="mmap"></div>
-    <div id="sidebar">Messrs. Moony, Wormtail, Padfoot, and Prongs<br />Purveyors of Aids to Magical Mischief-Makers<br />are proud to present<br />THE MARAUDER'S MAP</div>
+    <div id="sidebar">Messrs. Moony, Wormtail, Padfoot, and Prongs<br />Purveyors of Aids to Magical Mischief-Makers<br /><span class="smalltext">are proud to present</span><br /><span class="titletext">THE MARAUDER'S MAP</span></div>
+
     <script>
+    var map;
+    function send_location(position) {
+        var locationGetter = new XMLHttpRequest();
+        locationGetter.open("post", "http://chickenofthesea.herokuapp.com/sendLocation", true);
+        locationGetter.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        locationGetter.onreadystatechange = function() {
+            if (locationGetter.readyState == 4) {
+                console.log(locationGetter.responseText);
+            }
+        }
+        locationGetter.send("login=JimmyValmer" + 
+                            "&lat=" + position.coords.latitude +
+                            "&lng=" + position.coords.longitude);
+    }
+
     function initialize() {
         var mapOptions = {
-          center: { lat: 42.4069, lng: -71.1198},
-          zoom: 15
+            center: { lat: 42.4069, lng: -71.1198},
+            zoom: 16
         };
         map = new google.maps.Map(document.getElementById("mmap"),
             mapOptions);
-      }
-      google.maps.event.addDomListener(window, 'load', initialize);
-      </script>
+    }
+    google.maps.event.addDomListener(window, 'load', initialize);
+    navigator.geolocation.getCurrentPosition(send_location);
+    </script>
 </body>
 </html>

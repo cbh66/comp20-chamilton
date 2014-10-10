@@ -12,7 +12,17 @@ html, body, #mmap
 }
 
 #sidebar {
+    font-family: "Brush Script MT", cursive;
+    font-size: 22px;
     float: right;
     width: 30%;
     text-align: center;
+}
+
+.titletext {
+    font-size: 28px;
+}
+
+.smalltext {
+    font-size: 18px;
 }
