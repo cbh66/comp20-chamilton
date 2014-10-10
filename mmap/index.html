@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="mmap-style.css">
+    <title>I Solumnly Swear That I am Up to No Good</title>
+    <meta charset="utf-8" />
+    <script src="http://maps.googleapis.com/maps/api/js?sensor=true&amp;libraries=places"></script>
+</head>
+<body>
+    <div id="mmap"></div>
+    <div id="sidebar">Messrs. Moony, Wormtail, Padfoot, and Prongs<br />Purveyors of Aids to Magical Mischief-Makers<br />are proud to present<br />THE MARAUDER'S MAP</div>
+    <script>
+    function initialize() {
+        var mapOptions = {
+          center: { lat: 42.4069, lng: -71.1198},
+          zoom: 15
+        };
+        map = new google.maps.Map(document.getElementById("mmap"),
+            mapOptions);
+      }
+      google.maps.event.addDomListener(window, 'load', initialize);
+      </script>
+</body>
+</html>
