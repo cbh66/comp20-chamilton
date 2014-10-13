@@ -10,15 +10,25 @@
 <body>
     <div id="redline_map"></div>
     <script>
+    var map;
+    var trainListener = new XMLHttpRequest();
+    trainListener.open("get", "http://developer.mbta.com/lib/rthr/red.json", true);
+    trainListener.onreadystatechange = function() {
+        if (trainListener.readyState == 4 && trainListener.status == 200) {
+            console.log(trainListener.responseText);
+        }
+    }
+    trainListener.send();
+
     function initialize() {
         var mapOptions = {
-          center: { lat: 42.309562, lng: -71.054163},  //  Approx. center of red line
-          zoom: 11
+            center: { lat: 42.309562, lng: -71.054163},  //  Approx. center of red line
+            zoom: 11
         };
-        var map = new google.maps.Map(document.getElementById("redline_map"),
+        map = new google.maps.Map(document.getElementById("redline_map"),
             mapOptions);
-      }
-      google.maps.event.addDomListener(window, 'load', initialize);
+    }
+    google.maps.event.addDomListener(window, 'load', initialize);
     </script>
 </body>
 </html>
