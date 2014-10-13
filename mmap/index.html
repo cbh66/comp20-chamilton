@@ -12,6 +12,7 @@
 
     <script>
     var map;
+
     function addSelf(lat, lng) {
         var mark = new google.maps.Marker({
             position: new google.maps.LatLng(lat, lng),
@@ -50,9 +51,19 @@
         });
     }
 
-    function addCharacters(characterList) {
+    function drawLineBetween(charPos, myPos) {
+        var path = new google.maps.Polyline({
+            path: [new google.maps.LatLng(charPos.latitude, charPos.longitude),
+                   new google.maps.LatLng(myPos.latitude, myPos.longitude)],
+            geodesic: true
+        });
+        path.setMap(map);
+    }
+
+    function addCharacters(characterList, myPosition) {
         for (var i = 0; i < characterList.length; i++) {
             addCharMarker(characterList[i]);
+            drawLineBetween(characterList[i].loc, myPosition);
         }
     }
 
@@ -88,7 +99,7 @@
         locationGetter.onreadystatechange = function() {
             if (locationGetter.readyState == 4) {
                 var response = JSON.parse(locationGetter.responseText);
-                addCharacters(response.characters);
+                addCharacters(response.characters, position.coords);
                 addStudents(response.students);
             }
         }
