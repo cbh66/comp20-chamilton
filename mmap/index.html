@@ -12,6 +12,24 @@
 
     <script>
     var map;
+    function addSelf(lat, lng) {
+        var mark = new google.maps.Marker({
+            position: new google.maps.LatLng(lat, lng),
+            map: map,
+            title: "JimmyValmer",
+            icon: "jv.gif"
+        });
+        var text = "Name: " + "JimmyValmer" + "<br />"
+                 + "Latitude: " + lat + "<br />"
+                 + "Longitude: " + lng + "<br />";
+        var info = new google.maps.InfoWindow({
+            content: text
+        });
+        google.maps.event.addListener(mark, 'click', function() {
+            info.open(map, mark);
+        });
+    }
+
     function addCharMarker(character){
         var pos = character.loc;
         var mark = new google.maps.Marker({
@@ -77,6 +95,7 @@
         locationGetter.send("login=JimmyValmer" + 
                             "&lat=" + position.coords.latitude +
                             "&lng=" + position.coords.longitude);
+        addSelf(position.coords.latitude, position.coords.longitude);
     }
 
     function initialize() {
