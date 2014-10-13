@@ -17,12 +17,13 @@
         var mark = new google.maps.Marker({
             position: new google.maps.LatLng(pos.latitude, pos.longitude),
             map: map,
-            title: character.name
+            title: character.name,
+            icon: character.name + ".png"
         });
         var text = "Name: " + character.name + "<br />"
                  + "Latitude: " + pos.latitude + "<br />"
-                 + "Longitude: " + pos.longitude + "<br />"
-                 + "Note: " + character.note;
+                 + "Longitude: " + pos.longitude + "<br />";
+        if (character.note) text += "Note: " + character.note;
         var info = new google.maps.InfoWindow({
             content: text
         });
