@@ -37,8 +37,30 @@
             addCharMarker(characterList[i]);
         }
     }
-    function addStudents(studentList) {
 
+    function addStudentMarker(student) {
+        var mark = new google.maps.Marker({
+            position: new google.maps.LatLng(student.lat, student.lng),
+            map: map,
+            title: student.name,
+            icon: "student.png"
+        });
+        var text = "Login: " + student.login + "<br />"
+                 + "Latitude: " + student.lat + "<br />"
+                 + "Longitude: " + student.lng + "<br />"
+                 + "Timestamp: " + student.created_at;
+        var info = new google.maps.InfoWindow({
+            content: text
+        });
+        google.maps.event.addListener(mark, 'click', function() {
+            info.open(map, mark);
+        });
+    }
+
+    function addStudents(studentList) {
+        for (var i = 0; i < studentList.length; i++) {
+            addStudentMarker(studentList[i]);
+        }
     }
 
     function send_location(position) {
@@ -60,7 +82,7 @@
     function initialize() {
         var mapOptions = {
             center: { lat: 42.4069, lng: -71.1198},
-            zoom: 14
+            zoom: 13
         };
         map = new google.maps.Map(document.getElementById("mmap"),
             mapOptions);
