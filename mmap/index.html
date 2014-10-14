@@ -8,7 +8,7 @@
 </head>
 <body>
     <div id="mmap"></div>
-    <div id="sidebar"><div id="intro">Messrs. Moony, Wormtail, Padfoot, and Prongs<br />Purveyors of Aids to Magical Mischief-Makers<br /><span class="smalltext">are proud to present</span><br /><span class="titletext">THE MARAUDER'S MAP</span></div><div id="locations"></div></div>
+    <div id="sidebar"><div id="intro">Messrs. Moony, Wormtail, Padfoot, and Prongs<br />Purveyors of Aids to Magical Mischief-Makers<br /><span class="smalltext">are proud to present</span><br /><span class="titletext">THE MARAUDER'S MAP</span><hr /></div><div id="charinfo"></div></div>
 
     <script>
     var map;
@@ -60,10 +60,35 @@
         path.setMap(map);
     }
 
+    function distBtwn(lat1, lng1, lat2, lng2) {
+        Number.prototype.toRad = function() {
+            return this * Math.PI / 180;
+        }
+        var earthRadius = 3959;
+        var x1 = lat2-lat1;
+        var dLat = x1.toRad();  
+        var x2 = lng2-lng1;
+        var dLon = x2.toRad();  
+        var a = Math.sin(dLat/2) * Math.sin(dLat/2) + 
+                        Math.cos(lat1.toRad()) * Math.cos(lat2.toRad()) * 
+                        Math.sin(dLon/2) * Math.sin(dLon/2);  
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+        return earthRadius * c; 
+    }
+
+    function printDistanceBetween(char, self) {
+        var elem = document.getElementById("charinfo").appendChild(document.createElement("p"));
+        elem.textContent = char.name + " is "
+                         + distBtwn(char.loc.latitude, char.loc.longitude,
+                                    self.latitude, self.longitude).toFixed(3)
+                         + " mi away";
+    }
+
     function addCharacters(characterList, myPosition) {
         for (var i = 0; i < characterList.length; i++) {
             addCharMarker(characterList[i]);
             drawLineBetween(characterList[i].loc, myPosition);
+            printDistanceBetween(characterList[i], myPosition);
         }
     }
 
@@ -97,7 +122,7 @@
         locationGetter.open("post", "http://chickenofthesea.herokuapp.com/sendLocation", true);
         locationGetter.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         locationGetter.onreadystatechange = function() {
-            if (locationGetter.readyState == 4) {
+            if (locationGetter.readyState == 4 && locationGetter.status == 200) {
                 var response = JSON.parse(locationGetter.responseText);
                 addCharacters(response.characters, position.coords);
                 addStudents(response.students);

@@ -17,10 +17,14 @@ html, body, #mmap
 }
 
 #intro {
-    
+
     font-family: "Brush Script MT", cursive;
     font-size: 22px;
     text-align: center;
+}
+
+#charinfo {
+    margin: 0% 5%;
 }
 
 .titletext {
