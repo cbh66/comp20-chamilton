@@ -12,6 +12,7 @@
 
     <script>
     var map;
+    var currentInfoBox;
 
     function addSelf(lat, lng) {
         var mark = new google.maps.Marker({
@@ -27,7 +28,9 @@
             content: text
         });
         google.maps.event.addListener(mark, 'click', function() {
+            if(currentInfoBox) currentInfoBox.close();
             info.open(map, mark);
+            currentInfoBox = info;
         });
     }
 
@@ -47,7 +50,9 @@
             content: text
         });
         google.maps.event.addListener(mark, 'click', function() {
+            if(currentInfoBox) currentInfoBox.close();
             info.open(map, mark);
+            currentInfoBox = info;
         });
     }
 
@@ -81,7 +86,7 @@
         elem.textContent = char.name + " is "
                          + distBtwn(char.loc.latitude, char.loc.longitude,
                                     self.latitude, self.longitude).toFixed(3)
-                         + " mi away";
+                         + " mi. away";
     }
 
     function addCharacters(characterList, myPosition) {
@@ -121,7 +126,9 @@
             content: text
         });
         google.maps.event.addListener(mark, 'click', function() {
+            if(currentInfoBox) currentInfoBox.close();
             info.open(map, mark);
+            currentInfoBox = info;
         });
     }
 
