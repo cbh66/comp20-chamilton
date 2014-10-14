@@ -85,6 +85,20 @@
     }
 
     function addCharacters(characterList, myPosition) {
+        compareDist = function(a, b) {
+            var a_dist = distBtwn(a.loc.latitude, a.loc.longitude,
+                                  myPosition.latitude, myPosition.longitude);
+            var b_dist = distBtwn(b.loc.latitude, b.loc.longitude,
+                                  myPosition.latitude, myPosition.longitude);
+            if (a_dist < b_dist) {
+                return -1;
+            } else if (a_dist > b_dist) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+        characterList.sort(compareDist);
         for (var i = 0; i < characterList.length; i++) {
             addCharMarker(characterList[i]);
             drawLineBetween(characterList[i].loc, myPosition);
