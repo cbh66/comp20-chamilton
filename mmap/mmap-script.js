@@ -141,6 +141,8 @@ function send_location(position) {
                         "&lat=" + position.coords.latitude +
                         "&lng=" + position.coords.longitude);
     addSelf(position.coords.latitude, position.coords.longitude);
+    map.panTo(new google.maps.LatLng(position.coords.latitude,
+                                     position.coords.longitude));
 }
 
 function initialize() {
