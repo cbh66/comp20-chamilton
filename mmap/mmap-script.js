@@ -8,17 +8,17 @@ function addSelf(lat, lng) {
         title: "JimmyValmer",
         icon: "jv.gif"
     });
-    var text = "Name: " + "JimmyValmer" + "<br />"
+    var text = "You are here:<br />"
+             + "Name: " + "JimmyValmer" + "<br />"
              + "Latitude: " + lat + "<br />"
              + "Longitude: " + lng + "<br />";
     var info = new google.maps.InfoWindow({
         content: text
     });
     google.maps.event.addListener(mark, 'click', function() {
-        if(currentInfoBox) currentInfoBox.close();
         info.open(map, mark);
-        currentInfoBox = info;
     });
+    info.open(map, mark);
 }
 
 function addCharMarker(character){
