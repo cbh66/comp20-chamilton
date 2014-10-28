@@ -7,23 +7,36 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script>
     function store(value) {
-        localStorage[new Date()] = value;
+        localStorage[new Date().getTime()] = value;
+    }
+
+    function get_keys_sorted(dict, compare) {
+        var arr = [];
+        for (key in dict) {
+            arr.push(key);
+        }
+        arr.sort(compare);
+        return arr;
     }
 
     function update(section) {
         section.empty();
-        for (key in localStorage) {
-            section.append(key + " - " + localStorage[key] + "<br />");
+        var rev_sorted = get_keys_sorted(localStorage, function(a, b) {
+            if (a > b) return -1;
+            if (a == b) return 0;
+            return 1;
+        });
+        for (key in rev_sorted) {
+            var time = rev_sorted[key];
+            section.append(new Date(parseInt(time)) + " - " + localStorage[time] + "<br />");
         }
     }
 
     $(document).ready(function() {
-        localStorage.clear();   // Just for now
         $("#msg").change(function() {
             store($(this).val());
-            update($("#content"));
+            update($("#news"));
         });
-        $("#news").append($(document.createElement("div")).attr("id", "content"));
     });
     </script>
 </head>
