@@ -4,9 +4,27 @@
 
 <head>
     <title>My News Feed</title>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script>
-      // Most of your work will be done here...
+    function store(value) {
+        localStorage[new Date()] = value;
+    }
+
+    function update(section) {
+        section.empty();
+        for (key in localStorage) {
+            section.append(key + " - " + localStorage[key] + "<br />");
+        }
+    }
+
+    $(document).ready(function() {
+        localStorage.clear();   // Just for now
+        $("#msg").change(function() {
+            store($(this).val());
+            update($("#content"));
+        });
+        $("#news").append($(document.createElement("div")).attr("id", "content"));
+    });
     </script>
 </head>
 
