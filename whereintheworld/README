@@ -1,0 +1,17 @@
+Comp 20 Assignment 3
+Colin Hamilton, Fall 2014
+
+Every aspect of the assignment has been correctly written and tested in Chrome
+and Firefox.
+
+I store reverse-geolocated positions (when they can be found) in the
+database along with the other information for efficiency: it makes sense
+to only calculate that once when it is submitted, rather than every time
+a request is made for the home page.  This way each request takes constant
+time, rather than the alternative where a home-page request would be linear
+in the size of the database.
+
+I did not collaborate with anyone on this assignment (though used Google
+to find some of the things I used, including reverse geolocation).
+
+I spent approximately 7 hours on this project.
