@@ -59,14 +59,14 @@ function distBtwn(lat1, lng1, lat2, lng2) {
     }
     var earthRadius = 3959;
     var x1 = lat2-lat1;
-    var dLat = x1.toRad();  
+    var dLat = x1.toRad();
     var x2 = lng2-lng1;
-    var dLon = x2.toRad();  
-    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + 
-                    Math.cos(lat1.toRad()) * Math.cos(lat2.toRad()) * 
-                    Math.sin(dLon/2) * Math.sin(dLon/2);  
-    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-    return earthRadius * c; 
+    var dLon = x2.toRad();
+    var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                    Math.cos(lat1.toRad()) * Math.cos(lat2.toRad()) *
+                    Math.sin(dLon/2) * Math.sin(dLon/2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return earthRadius * c;
 }
 
 function printDistanceBetween(char, self) {
@@ -128,7 +128,7 @@ function addStudents(studentList) {
 
 function send_location(position) {
     var locationGetter = new XMLHttpRequest();
-    locationGetter.open("post", "http://chickenofthesea.herokuapp.com/sendLocation", true);
+    locationGetter.open("post", "https://shrieking-tomb-7833.herokuapp.com/sendLocation", true);
     locationGetter.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     locationGetter.onreadystatechange = function() {
         if (locationGetter.readyState == 4 && locationGetter.status == 200) {
@@ -137,7 +137,7 @@ function send_location(position) {
             addStudents(response.students);
         }
     }
-    locationGetter.send("login=JimmyValmer" + 
+    locationGetter.send("login=PinkiePie" +
                         "&lat=" + position.coords.latitude +
                         "&lng=" + position.coords.longitude);
     addSelf(position.coords.latitude, position.coords.longitude);
