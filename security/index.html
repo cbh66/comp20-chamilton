@@ -1,0 +1,150 @@
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="style.css"></link>
+    <title>Security Assessment of Marauder's Map</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            //  Open all external links in a new window
+            $( 'a[href^="http://"]' ).attr( 'target','_blank' );
+        });
+    </script>
+</head>
+
+<body>
+<h1 id="security-assessment-of-marauders-map">Security Assessment of Marauder's Map</h1>
+
+<p>Prepared by <a href="mailto:colin.hamilton@tufts.edu" target="_blank">Colin Hamilton</a>, Tufts University</p>
+<p>December 2014</p>
+
+<h2>Contents</h2>
+<div id="contents">
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#methodology">Methodology</a></li>
+<li><a href="#abstract-of-findings">Abstract of Findings</a></li>
+<li><a href="#issues-found">Issues Found</a></li>
+<ul>
+    <li><a href="#cross-site-scripting">Cross-Site Scripting</a></li>
+    <li><a href="#denial-of-service">Denial-of-Service</a></li>
+    <li><a href="#execution-of-arbitrary-mongodb-queries">Execution of Arbitrary MongoDB Queries</a></li>
+    <li><a href="#lack-of-location-verification">Lack of Location Verification</a></li>
+</ul>
+<li><a href="#conclusion">Conclusion</a></li>
+</ul>
+</div>
+
+<h2 id="introduction">Introduction</h2>
+<hr>
+
+<p>The Marauder's Map application is used for finding and submitting locations of users from all around the world.  It allows both for presenting this data visually <a href="http://tuftsdev.github.io/comp20-schurch/mmap/">in a map</a>, and <a href="http://arcane-ridge-5647.herokuapp.com/">in list form</a>.  This assessment shows that the application is open to a number of security vulnerabilities that pose a risk to clients and the server.</p>
+
+<p>Of course, the nature of the application itself raises security questions: the application exposes user locations to the world, which can be especially abused by clients who own an invisibility cloak.  However, this assessment focuses only on <em>unintended</em> security issues, and specifically notes vulnerabilities in the server-side code.  Fixing these problems as soon as possible is advised.</p>
+
+<h2 id="methodology">Methodology</h2>
+<hr>
+
+<p>Initial tests were done using a black-box method.  As a real attacker would do, I tried a number of attacks to see what would work, without any knowledge of the server code.  This was done using only simple, widely-available tools to send data to the server: the Chrome web browser and the command-line utility <code>curl</code>.</p>
+
+<p>Following this set of tests, I inspected the code itself.  There, I was able to see the extent of the vulnerabilities and their causes, and determine what would be required to fix them.  Much of this analysis is made with reference to <a href="https://www.owasp.org/index.php/Main_Page">The Open Web Application Security Project (OWASP)</a>, who maintain information on common security vulnerabilities and effects.  They are referenced below where relevent.</p>
+
+<h2 id="abstract-of-findings">Abstract of Findings</h2>
+<hr>
+
+<p>The issues found largely arise from lack of input validation.  The server code avoids verifying most user input, allowing the client to submit nearly any data they wish, in whatever quantities they wish.  This opens up a number of security holes, in which an attacker can send malicious or invalid data to the server.  I was able to find four such vulnerabilities.  First, attackers can send code to the server, which is then sent to every other user, to be run on their browsers.  Second, attackers can send huge amounts of data to the server, which fills up the database.  When the database is full, the application is no longer useable.  Third, users are able to access whatever information they want from the database, potentially putting personal data at risk.  Finally, users can submit false location data to the server, allowing them to entirely misuse the application.</p>
+
+<h2 id="issues-found">Issues Found</h2>
+
+<hr>
+
+<h3 id="cross-site-scripting">Cross-Site Scripting</h3>
+
+<ul>
+<li>Location:  Homepage, /sendLocation POST page</li>
+<li>Severity:  <span class="high-severity">High</span>.  This vulnerability affects all users of the site, as well as any applications that rely on valid data being sent back from the server.  <a href="https://www.owasp.org/index.php/Top_10_2013-A3-Cross-Site_Scripting_(XSS)">Cross-site scripting</a> was identified by OWASP as the number 3 security flaw in 2013, and "the most prevalent web application security flaw."</li>
+<li>Description:  Data submitted through the /sendLocation POST page is stored and sent to users on the homepage without proper escaping.   This allows an attacker to send malicious code to the database through the <code>login</code> parameter, which is then sent to all users of the application and run on the client side when the attacker's login is rendered.  For example, by sending a login of <code>&lt;script&gt;alert("HACKED");&lt;/script&gt;</code>, all users will be treated to an alert upon visiting the homepage that, indeed, the site has been hacked. <br><img src="hacked.png"><br>
+Of course, more dangerous code could also be submitted.  The vulnerability comes from the following lines, when the user data is stored:
+
+<pre><code>var login = req.body.login, lat = parseFloat(req.body.lat),
+    lng = parseFloat(req.body.lng);
+var toInsert = {
+    "login": login,
+    "lat": lat,
+    "lng": lng,
+    "created_at": dateString,
+};
+</code></pre>
+
+Although the <code>lat</code> and <code>lng</code> parameters are converted to numbers, no such conversion is made for <code>login</code>, which is inserted literally, as-is.</li>
+<li>Resolution:  Upon receipt of data, the /sendLocation page ought to properly escape it.  The simplest way to do this would be to replace control characters, (such as <code>&lt;</code> and <code>&gt;</code>), with the escaped version of the character(<code>&amp;lt;</code> and <code>&amp;gt;</code>), to ensure that the login displays literally on client pages.  Alternatively, a stricter verification could be enforced, in which usernames with invalid characters are rejected altogether, or only certain logins are accepted (eg. those who have gone through a registration process).</li>
+</ul>
+
+<h3 id="denial-of-service">Denial-of-Service</h3>
+
+<ul>
+<li>Location:  /sendLocation POST page</li>
+<li>Severity:  <span class="high-severity">High</span>.  An attacker can easily overload the database, rendering the application unusable.</li>
+<li>Description:  The server currently places no restriction on the size of data sent to the server, and any data sent to the /sendLocation page is placed into the database as-is.  An attacker can easily send an enormous string through one of the parameters, and can even do this multiple times.  The following script brought down the application within a minute:
+
+<pre><code>yes overload | awk '{printf("%s", $0)}' | dd of=big-string.txt bs=100 count=1000
+for (( ; ; )) do
+    curl --data "login=$(cat big-string.txt)&amp;lat=0&amp;lng=0" http://arcane-ridge-5647.herokuapp.com/sendLocation
+done
+</code></pre>
+
+<img src="dos.png"><br>
+
+Database space is not unlimited, and when there is no more space, the database can no longer be accessed. The application then ceases to function properly.</li>
+<li>Resolution:  OWASP notes that <a href="https://www.owasp.org/index.php/Application_Denial_of_Service">Application Denial of Service</a> is particularly difficult to prevent, as it is difficult to distinguish between an attack and legitimate traffic.  However, an attack can be made more difficult by imposing resource limitations on users.  In this case, the ability to send large amounts of data through the input parameters is what makes the application particularly vulnerable.  There are a number of tools that can be used to limit the size of input parameters in a request (for example, <a href="https://www.npmjs.org/package/body-parser">the body-parser node package</a> supports this).  Requests that are too large should be rejected to prevent this abuse.  It could also be worthwhile to limit the number of requests per minute from each user or IP address.</li>
+</ul>
+
+<h3 id="execution-of-arbitrary-mongodb-queries">Execution of Arbitrary MongoDB Queries</h3>
+
+<ul>
+<li>Location:  /locations.json GET page</li>
+<li>Severity:  <span class="med-severity">Medium</span>.  The entire database is already on display on the homepage, so there is currently no additional information that an attacker can find from this.  Luckily, also, the client is limited to queries: they cannot modify the database or execute arbitrary code.  However, if sensitive data were to be stored in the database, this vulnerability would become serious.  This is a form of <a href="https://www.owasp.org/index.php/Top_10_2013-A1-Injection">injection</a>, which OWASP identified as the number 1 security flaw in 2013.</li>
+<li>Description:  The /locations.json page is intended to find information on a single user.  However, through this page clients are able to query the database directly, allowing them to access any data stored there.  In particular, they can acquire the entire database by saying <code>login[$ne]=</code>. <br>
+<img src="mongodb-query.png"><br>
+The flaw comes from the following lines:
+
+<pre><code>    var user = req.query.login;
+    var cursor = collection.find({login : user });
+</code></pre>
+
+The server currently uses the <code>login</code> parameter directly to perform a search, assuming that the parameter, submitted by the client, is a string.  By using <code>login[$ne]</code> as the parameter, the client is able to send <code>login</code> as an object instead of a string.  Because MongoDB uses objects for special meanings, this allows the client to perform arbitrary searches on the database.</li>
+<li>Resolution:  The creation of an object from the parameter string is a consequence of setting the body-parser to convert to JSON.  However, the server code for this page can ensure that the parameter is the right type before querying the database, and ought to reject queries whose parameter is an object, or at least convert it to a string.</li>
+</ul>
+
+<h3 id="lack-of-location-verification">Lack of Location Verification</h3>
+
+<ul>
+<li>Location:  /sendLocation POST page</li>
+<li>Severity:  <span class="low-severity">Low</span>.  Though this does not cause direct harm to the users, it does somewhat defeat the purpose of the application.</li>
+<li>Description:  Clients are able to send any coordinates they wish when sending <code>lat</code> and <code>lng</code> parameters.  The user can falsify their positions to make the application believe they are anywhere in the world.  They can provide coordinates that do not exist - for example, a latitude greater than 90.  They can provide parameters that are not numbers, which are stored as "NaN" (not a number).  Finally, they can omit the parameter altogether, allowing them to access others' data without providing their own.<br>
+<img src="invalid.png">
+</li>
+<li>Resolution:  Upon receipt of data, the server should verify that <code>lat</code> and <code>lng</code> exist, are indeed numbers, and have reasonable values.  Further validations could be also be made to make sure the user is not lying about their location.  For example, the server could compare the submitted coordinates with the client's IP address; it could also compare the submitted location with past locations for that user to check that it is realistic.</li>
+</ul>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<hr>
+
+<p>The server code for the Marauder's Map application places too much faith in user input, assuming it will be what is expected.  When the client is trusted, it makes it easy for an attacker to find flaws simply by submitting malicious data to the server.  This data could affect other users of the site, could harm the server itself, and could expose private data.  Most such flaws can be avoided by anticipating that input parameters could be malformed, and either fixing or rejecting them if that is the case.</p>
+
+<p>Exacerbating each of these issues is the fact that the server currently accepts requests from anywhere, with the lines</p>
+
+<pre><code>app.all('*', function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods',
+               'PUT, GET, POST, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+});
+</code></pre>
+
+<p>This allows every page on the server to be requested from any other domain, which makes it trivial for an attacker to send malicious data to the server from their own machines.  For this reason, it may be wise to restrict access to a smaller set of domains, at least for those pages that allow submission of data.  Even better would be requiring clients to register a key in order to send such requests, which in addition to restricting access would also make it easier to find the source of the attack, should one happen.</p>
+
+<p>Fixes for these vulnerabilities should be undertaken as soon as possible.  The best and most permanent fixes could involve a large rewrite of the server code.  Such a project would cost approximately $700, but would result in a secure server for a great application.</p>
+</body>
+</html>
